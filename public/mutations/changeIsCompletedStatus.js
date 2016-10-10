@@ -4,27 +4,17 @@ export default class ChangeIsCompletedStatusMutation extends Relay.Mutation {
   static fragments = {
     todo: () => Relay.QL`
       fragment on Todo {
-        id,
-        caption,
-        isCompleted
-      }
-    `,
-    user: () => Relay.QL`
-      fragment on User {
-        id,
-        login
+        id
       }
     `,
   };
   getMutation() {
     return Relay.QL`mutation{changeIsCompletedStatus}`;
   }
-  getCollisionKey() {
-    return `check_${this.props.todo.id}`;
-  }
   getFatQuery() {
+    console.log('get fat query', this.props);
     return Relay.QL`
-      fragment on ChangeIsCompletedStatusPayload @relay(pattern: true) {
+      fragment on ChangeIsCompletedStatusPayload {
         todo {
           isCompleted
         }
@@ -36,7 +26,6 @@ export default class ChangeIsCompletedStatusMutation extends Relay.Mutation {
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         todo: this.props.todo.id,
-        user: this.props.user.id,
       },
     }];
   }
@@ -46,9 +35,10 @@ export default class ChangeIsCompletedStatusMutation extends Relay.Mutation {
     };
   }
   getOptimisticResponse() {
+    console.log('called', this.props.todo);
     return {
       todo: {
-        isCompleted: !this.props.todo.isCpmpleted,
+        isCompleted: !this.props.todo.isCompleted,
       },
     };
   }

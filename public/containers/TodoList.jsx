@@ -14,9 +14,8 @@ class TodoList extends React.Component {
         {
           todos.edges.map(({ node: todo }) => (
             <Todo
-              caption={todo.caption}
+              todoInfo={todo}
               key={todo.id}
-              isCompleted={todo.isCompleted}
             />
           ))
         }
@@ -32,8 +31,7 @@ export default Relay.createContainer(TodoList, {
         edges {
           node {
             id
-            caption
-            isCompleted
+            ${Todo.getFragment('todoInfo')}
           }
         }
       }

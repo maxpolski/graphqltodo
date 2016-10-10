@@ -10,8 +10,6 @@ class TodoApp extends React.Component {
       user,
     } = this.props;
 
-    console.log('pr', this.props);
-
     return (
       <div>
         Todos by {user.login}:
