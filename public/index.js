@@ -7,7 +7,7 @@ import AppHomeRoute from './routes/AppHomeRoute';
 
 const appRoot = document.getElementById('root');
 
-const currentName = 'maxpolski';
+const currentName = 'user1';
 
 render(
   <Relay.RootContainer

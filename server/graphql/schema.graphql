@@ -1,3 +1,14 @@
+input AddTodoInput {
+  id: ID!
+  caption: String!
+  clientMutationId: String
+}
+
+type AddTodoPayload {
+  user: User
+  clientMutationId: String
+}
+
 input ChangeIsCompletedStatusInput {
   id: ID!
   clientMutationId: String
@@ -10,6 +21,7 @@ type ChangeIsCompletedStatusPayload {
 
 type Mutation {
   changeIsCompletedStatus(input: ChangeIsCompletedStatusInput!): ChangeIsCompletedStatusPayload
+  addTodo(input: AddTodoInput!): AddTodoPayload
 }
 
 # An object with an ID

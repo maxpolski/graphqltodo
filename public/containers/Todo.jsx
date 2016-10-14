@@ -11,7 +11,6 @@ class Todo extends React.Component {
   }
 
   _handleChangingIsCompletedStatus() {
-    console.log('todoInfo', this.props.todoInfo);
     this.props.relay.commitUpdate(
       new ChangeIsCompletedStatusMutation({
         todo: this.props.todoInfo,
@@ -30,7 +29,7 @@ class Todo extends React.Component {
         type="none"
         onClick={this._handleChangingIsCompletedStatus}
       >
-        {caption} - {isCompleted ? 'checked' : 'nope'}
+        {caption} - {isCompleted ? 'completed' : 'not completed'}
       </li>
     );
   }

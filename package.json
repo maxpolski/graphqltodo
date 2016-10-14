@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "update-schema": "./node_modules/.bin/babel-node ./server/scripts/update-schema",
+    "generate-db": "./node_modules/.bin/babel-node ./scripts/generateDB.js",
     "start": "npm i && npm run update-schema && ./node_modules/.bin/webpack && node ./server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -28,7 +29,6 @@
     "eslint-plugin-import": "^2.0.0",
     "eslint-plugin-jsx-a11y": "^2.2.2",
     "eslint-plugin-react": "^6.3.0",
-    "react-relay": "^0.9.3",
     "webpack": "^1.13.2",
     "webpack-hot-middleware": "^2.12.2"
   },
@@ -41,6 +41,7 @@
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
+    "react-relay": "^0.9.3",
     "redux": "^3.6.0",
     "relay": "^0.8.0-1"
   }

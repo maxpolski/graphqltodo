@@ -5,6 +5,7 @@ export default class ChangeIsCompletedStatusMutation extends Relay.Mutation {
     todo: () => Relay.QL`
       fragment on Todo {
         id
+        isCompleted
       }
     `,
   };
@@ -12,10 +13,10 @@ export default class ChangeIsCompletedStatusMutation extends Relay.Mutation {
     return Relay.QL`mutation{changeIsCompletedStatus}`;
   }
   getFatQuery() {
-    console.log('get fat query', this.props);
     return Relay.QL`
       fragment on ChangeIsCompletedStatusPayload {
         todo {
+          id
           isCompleted
         }
       }`
@@ -35,9 +36,9 @@ export default class ChangeIsCompletedStatusMutation extends Relay.Mutation {
     };
   }
   getOptimisticResponse() {
-    console.log('called', this.props.todo);
     return {
-      todo: {
+      todoInfo: {
+        id: this.props.todo.id,
         isCompleted: !this.props.todo.isCompleted,
       },
     };

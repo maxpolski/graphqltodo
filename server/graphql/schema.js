@@ -25,6 +25,7 @@ import userResolver from './resolvers/userResolver';
 import todoResolver from './resolvers/todoResolver';
 
 import { changeIsCompletedStatus } from './mutators/todoMutations';
+import { addTodo } from './mutators/userMutations';
 
 const {
   nodeInterface,
@@ -118,13 +119,35 @@ const ChangeIsCompletedStatusMutation = mutationWithClientMutationId({
   outputFields: {
     todo: {
       type: TodoType,
-      resolve: ({ id }) => todoResolver({}, { id }),
+      resolve: async ({ id }) => {
+        const todoResult = await todoResolver({}, { id });
+        return todoResult;
+      },
     },
   },
-  mutateAndGetPayload: ({ id }) => {
+  mutateAndGetPayload: async ({ id }) => {
     const localTodoId = fromGlobalId(id).id;
-    changeIsCompletedStatus(localTodoId);
-    return { localTodoId };
+    await changeIsCompletedStatus(localTodoId);
+    return { id: localTodoId };
+  },
+});
+
+const AddTodoMutation = mutationWithClientMutationId({
+  name: 'AddTodo',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    caption: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    user: {
+      type: UserType,
+      resolve: ({ login }) => userResolver({}, { login }),
+    },
+  },
+  mutateAndGetPayload: async ({ id, caption }) => {
+    const localUserId = fromGlobalId(id).id;
+    const login = await addTodo(localUserId, caption);
+    return { login };
   },
 });
 
@@ -132,6 +155,7 @@ const mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     changeIsCompletedStatus: ChangeIsCompletedStatusMutation,
+    addTodo: AddTodoMutation,
   }),
 });
 

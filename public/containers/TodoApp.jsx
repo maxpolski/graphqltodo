@@ -1,8 +1,8 @@
 import React from 'react';
 import Relay from 'react-relay';
 
-import ChangeIsCompletedStatusMutation from '../mutations/changeIsCompletedStatus';
 import TodoList from './TodoList';
+import AddTodoInput from './AddTodoInput';
 
 class TodoApp extends React.Component {
   render() {
@@ -14,6 +14,7 @@ class TodoApp extends React.Component {
       <div>
         Todos by {user.login}:
         <TodoList todos={user.todos} />
+        <AddTodoInput userInfo={user} />
       </div>
     );
   }
@@ -23,9 +24,10 @@ export default Relay.createContainer(TodoApp, {
   fragments: {
     user: () => Relay.QL`
       fragment on User {
-        login,
+        ${AddTodoInput.getFragment('userInfo')}
+        login
         id
-        todos(first: 10) {
+        todos(last: 10) {
           ${TodoList.getFragment('todos')}
         }
       }
