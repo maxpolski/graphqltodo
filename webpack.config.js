@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
   devtool: 'eval-source-map',
-  entry: './public/index',
+  entry: './public/js/index',
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -23,6 +23,10 @@ module.exports = {
       test: /\.jsx?$/,
       loaders: ['babel-loader'],
       exclude: /node_modules/,
+    },
+    {
+      loaders: ['style-loader', 'css-loader'],
+      test: /\.css/,
     }],
   },
 };

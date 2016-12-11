@@ -15,6 +15,7 @@ import {
   fromGlobalId,
   nodeDefinitions,
   mutationWithClientMutationId,
+  cursorForObjectInConnection,
 } from 'graphql-relay';
 
 
@@ -32,19 +33,19 @@ const {
   nodeField,
 } = nodeDefinitions(
   (globalId) => {
-    const { type, id, login = null } = fromGlobalId(globalId);
+    const { type, id } = fromGlobalId(globalId);
     if (type === 'User') {
-      return userResolver(login);
+      return userResolver({}, { id });
     } else if (type === 'Todo') {
-      return todoResolver(id);
+      return todoResolver({}, { id });
     }
     return null;
   },
   (obj) => {
-    if (obj instanceof User) {
-      return UserType;
-    } else if (obj instanceof Todo) {
-      return TodoType;
+    if (obj.login !== '') {
+      return 'User';
+    } else if (obj.isCompleted !== undefined) {
+      return 'Todo';
     }
     return null;
   }
@@ -64,7 +65,7 @@ const TodoType = new GraphQLObjectType({
   interfaces: [nodeInterface],
 });
 
-const { connectionType: todoConnection } =
+const { connectionType: todoConnection, edgeType: todoEdge } =
   connectionDefinitions({ name: 'Todo', nodeType: TodoType });
 
 const UserType = new GraphQLObjectType({
@@ -78,8 +79,8 @@ const UserType = new GraphQLObjectType({
       type: todoConnection,
       args: connectionArgs,
       resolve: (usr, args) =>
-        connectionFromArray(usr.todos.map(id =>
-          todoResolver({}, { id })), args),
+        connectionFromArray(usr.todos.map(id => todoResolver({}, { id })
+      ), args),
     },
   }),
   interfaces: [nodeInterface],
@@ -92,8 +93,8 @@ const queryType = new GraphQLObjectType({
     user: {
       type: UserType,
       args: {
-        login: {
-          name: 'login',
+        id: {
+          name: 'id',
           type: GraphQLString,
         },
       },
@@ -141,13 +142,28 @@ const AddTodoMutation = mutationWithClientMutationId({
   outputFields: {
     user: {
       type: UserType,
-      resolve: ({ login }) => userResolver({}, { login }),
+      resolve: ({ userId }) => userResolver({}, { userId }),
+    },
+    newTodoEdge: {
+      type: todoEdge,
+      resolve: async (payload) => {
+        const user = await userResolver({}, { id: payload.userId });
+        const newTodo = await todoResolver({}, { id: payload.newTodoId });
+        const dataToSend = {
+          cursor: cursorForObjectInConnection(
+            user.todos,
+            newTodo.id
+          ),
+          node: newTodo,
+        };
+        return dataToSend;
+      },
     },
   },
   mutateAndGetPayload: async ({ id, caption }) => {
     const localUserId = fromGlobalId(id).id;
-    const login = await addTodo(localUserId, caption);
-    return { login };
+    const todo = await addTodo(localUserId, caption);
+    return { userId: localUserId, newTodoId: todo.id };
   },
 });
 

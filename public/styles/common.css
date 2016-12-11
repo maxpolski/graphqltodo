@@ -1,0 +1,11 @@
+.container {
+  margin-top: 100px;
+}
+
+.todo-holder {
+  width: 400px;
+}
+
+.todo-item {
+  cursor: pointer;
+}

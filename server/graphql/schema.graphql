@@ -6,6 +6,7 @@ input AddTodoInput {
 
 type AddTodoPayload {
   user: User
+  newTodoEdge: TodoEdge
   clientMutationId: String
 }
 
@@ -51,7 +52,7 @@ type Query {
     # The ID of an object
     id: ID!
   ): Node
-  user(login: String): User
+  user(id: String): User
   todo(todo: String): Todo
 }
 

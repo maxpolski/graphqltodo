@@ -1,4 +1,4 @@
 import User from '../../models/user';
 
-export default (_, { login }) =>
-  User.findOne({ login });
+export default (_, { id }) =>
+  User.findById(id);

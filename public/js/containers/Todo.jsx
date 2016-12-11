@@ -28,8 +28,12 @@ class Todo extends React.Component {
       <li
         type="none"
         onClick={this._handleChangingIsCompletedStatus}
+        className="list-group-item todo-item"
       >
-        {caption} - {isCompleted ? 'completed' : 'not completed'}
+        {caption}
+        <span className="tag tag-default tag-pill float-xs-right">
+          {isCompleted ? '✓' : ''}
+        </span>
       </li>
     );
   }

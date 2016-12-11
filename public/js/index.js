@@ -7,12 +7,12 @@ import AppHomeRoute from './routes/AppHomeRoute';
 
 const appRoot = document.getElementById('root');
 
-const currentName = 'user1';
+const hardcodedId = '5800fcdca8aa9e14113882dc';
 
 render(
   <Relay.RootContainer
     Component={TodoApp}
-    route={new AppHomeRoute({ login: currentName })}
+    route={new AppHomeRoute({ id: hardcodedId })}
   />,
   appRoot
 );
