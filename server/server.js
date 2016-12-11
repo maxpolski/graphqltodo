@@ -5,7 +5,7 @@ import RootGraphQLSchema from './graphql/schema';
 import connectMongo from './services/mongoose';
 import indexHandler from './routes/indexRoute';
 
-const PORT = 8080;
+const PORT = 80;
 const app = express();
 
 app.use(express.static('dist'));
