@@ -18,10 +18,6 @@ import {
   cursorForObjectInConnection,
 } from 'graphql-relay';
 
-
-import User from '../models/user';
-import Todo from '../models/todo';
-
 import userResolver from './resolvers/userResolver';
 import todoResolver from './resolvers/todoResolver';
 
